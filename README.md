@@ -72,6 +72,9 @@ python rq/scale.py
 
 ## Relation List
 
+In YAGO4, relations and attributes come from [schema.org](schema.org), and all relations have the prefix 'sch__'.
+In the paper, for brevity, we ignore all the prefix 'sch_'.
+
 IR1:
 
 | R1              | R1 Extension      | R2                | R2 Extension         |
@@ -132,7 +135,7 @@ R3:
 
 R4:
 
-| R               |                   |
+| R               |   R Extension     |
 | --------------- | ----------------- |
 | sch__hasPart    | a part of         |
 | sch__parent     | a parent of       |
