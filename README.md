@@ -110,8 +110,8 @@ IR2:
 | sch__composer     | the composer of     |
 | sch__deathPlace   | the death place of  |
 | sch__editor       | the editor of       |
-| sch__familyName   | the familyName of   |
-| sch__givenName    | the givenName of    |
+| sch__familyName   | the family name of  |
+| sch__givenName    | the given name of   |
 | sch__gender       | the gender of       |
 | sch__homeLocation | the homeLocation of |
 | sch__organizer    | the organizer of    |
