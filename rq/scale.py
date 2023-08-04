@@ -1,7 +1,3 @@
-
-'''
-本文数据规模
-'''
 import sys
 import os
 

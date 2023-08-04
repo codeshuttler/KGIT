@@ -61,8 +61,35 @@ python check_questions.py -a result/ir4/answers_${model}.txt -o result/ir4/check
 ## RQs
 
 ```bash
+# RQ1
+python rq/manual_check_sample.py
+# Manual Check and get statistics
+python rq/manual_check_summary.py
+
+# RQ2
 python rq/effectiveness_all.py
 python rq/effectiveness_first.py
+
+# RQ3
+python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-small-1363200 --model_type small --subtask ir1 --start_step 1363200 --batch 64
+python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-base-1363200 --model_type base --subtask ir1 --start_step 1363200 --batch 64
+python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-large-1363200 --model_type large --subtask ir1 --start_step 1363200 --batch 64
+
+python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-small-1363200 --model_type small --subtask ir2 --start_step 1363200 --batch 64
+python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-base-1363200 --model_type base --subtask ir2 --start_step 1363200 --batch 64
+python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-large-1363200 --model_type large --subtask ir2 --start_step 1363200 --batch 64
+
+python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-small-1363200 --model_type small --subtask ir3 --start_step 1363200 --batch 64
+python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-base-1363200 --model_type base --subtask ir3 --start_step 1363200 --batch 64
+python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-large-1363200 --model_type large --subtask ir3 --start_step 1363200 --batch 64
+
+python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-small-1363200 --model_type small --subtask ir4 --start_step 1363200 --batch 64
+python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-base-1363200 --model_type base --subtask ir4 --start_step 1363200 --batch 64
+python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-large-1363200 --model_type large --subtask ir4 --start_step 1363200 --batch 64
+
+# RQ4 (See QAQA repository)
+
+# discussion
 python rq/effectiveness_all_nc.py
 python rq/effectiveness_first_nc.py
 python rq/efficiency.py

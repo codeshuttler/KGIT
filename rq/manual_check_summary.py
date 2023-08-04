@@ -18,7 +18,7 @@ KRS = ["ir1", "ir2", "ir3", "ir4"]
 def main():
     random.seed(43)
     for kr in KRS:
-        mark_file = f"manual_check/{kr}_sample_marked.xlsx"
+        mark_file = f"./rq_result/manual_check/{kr}_sample_marked.xlsx"
         if not os.path.exists(mark_file):
             continue
         df = pd.read_excel(mark_file)

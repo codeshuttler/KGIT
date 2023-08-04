@@ -51,4 +51,4 @@ def main(data_path: str, out_path: str):
         df.to_excel(out_file)
 
 if __name__ == "__main__":
-    main('./result', './manual_check')
+    main('./result', './rq_result/manual_check')
