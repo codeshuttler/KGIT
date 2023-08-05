@@ -49,6 +49,8 @@ def check(input_path: str, output_path: str, state: str):
                 elif state == "first":
                     if len(test_checklist) > 0 and not test_checklist[0]:
                         f.write(json.dumps(qa_pair) + "\n")
+                elif state == "pre":
+                    f.write(json.dumps(qa_pair) + "\n")
                 else:
                     if not all(test_checklist):
                         f.write(json.dumps(qa_pair) + "\n")

@@ -56,6 +56,11 @@ python check_questions.py -a result/ir1/answers_${model}.txt -o result/ir1/check
 python check_questions.py -a result/ir2/answers_${model}.txt -o result/ir2/check_first_${model}.txt -s first
 python check_questions.py -a result/ir3/answers_${model}.txt -o result/ir3/check_first_${model}.txt -s first
 python check_questions.py -a result/ir4/answers_${model}.txt -o result/ir4/check_first_${model}.txt -s first
+
+python check_questions.py -a result/ir1/answers_${model}.txt -o result/ir1/check_pre_${model}.txt -s pre
+python check_questions.py -a result/ir2/answers_${model}.txt -o result/ir2/check_pre_${model}.txt -s pre
+python check_questions.py -a result/ir3/answers_${model}.txt -o result/ir3/check_pre_${model}.txt -s pre
+python check_questions.py -a result/ir4/answers_${model}.txt -o result/ir4/check_pre_${model}.txt -s pre
 ```
 
 ## RQs
@@ -87,7 +92,14 @@ python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-small-1363200 --mo
 python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-base-1363200 --model_type base --subtask ir4 --start_step 1363200 --batch 64
 python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-large-1363200 --model_type large --subtask ir4 --start_step 1363200 --batch 64
 
-# RQ4 (See QAQA repository)
+# RQ4
+# Here we get the train/valid/test dataset under folder ./result/baseline/ for QAQA
+bash setup_baseline_data.sh
+# Then prepare the code and environment of QAQA following the readme in QAQA repo: https://github.com/ShenQingchao/QAQA.git
+pushd ../
+git clone https://github.com/ShenQingchao/QAQA.git
+popd
+# Please install the QAQA and setup configs following the readme https://github.com/ShenQingchao/QAQA/blob/master/README.md
 
 # discussion
 python rq/effectiveness_all_nc.py
