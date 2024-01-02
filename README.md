@@ -1,199 +1,249 @@
 # KGIT
 
+## Purpose
+To generate the questions with the inference relations automatically, we propose a novel testing method Knowledge Graph driven Inference Testing (***KGIT***), which employs facts in the Knowledge Graph (KG) as the seeds to logically construct test cases containing questions and contexts with inference relations.
+
+The artifact contains two parts.
+The first part stores YAGO4 knowledge graph data into a Neo4j graph database.
+The second part queries Neo4j for entity relationship pairs that meet certain conditions and generating test cases.
+Finally, the data is input into question-answering models to obtain results.
+
+## Provenance
 This is the source code for the paper "Knowledge Graph Driven Inference Testing for Question Answering Software".
 
-## Package Requirement
+# Data
+The data for the artifact is from [YAGO 4](https://yago-knowledge.org/downloads/yago-4). YAGO 4 a version of the YAGO knowledge base that is based on Wikidata — the largest public general-purpose knowledge base. 
 
-To run this code, some packages are needed as following:
+We have included a script in our code that downloads the YAGO4 data. However, due to potential slow download speeds from the official YAGO mirror, you can download the data from alternative sources and place it in the `neo4j_server/yago4_data`` directory.
 
-```python
-sentencepiece==0.1.97
-transformers==4.24.0
-neo4j==5.3.0
-neomodel==4.0.8
-datasets==2.8.0
-faiss-cpu==1.7.3
-matplotlib==3.6.3
-myers==1.0.1
-openpyxl==3.1.0
-sentence-transformers==2.2.2
+YAGO4 includes the following data files:
+* stats.tsv
+* yago-wd-full-types.nt.gz
+* yago-wd-sameAs.nt.gz
+* yago-wd-schema.nt.gz
+* yago-wd-shapes.nt.gz
+* yago-wd-simple-types.nt.gz
+
+In addition, we use the question-answering model `unifiedqa-v2-t5`, grammar correction model `pszemraj/flan-t5-large-grammar-synthesis` and text similarity model `sentence-transformers/all-mpnet-base-v2`, and the script automatically downloads the model weights from Hugging Face to the local environment. If the download speed is slow, you can use a Hugging Face mirror or specify the model directory in the code to use a locally downloaded model.
+
+# Setup
+## Hardware
+Hardware Requirements.
+
+Minimum:
+```
+Requires a 64-bit processor and operating system.
+Operating System: Linux distributions.
+Processor: Intel Core i5-6600.
+Memory: 64 GB RAM.
+GPU: NVIDIA GeForce RTX 2080ti. (GPUs are used for neural network inference, requires at least 6GB of graphics memory. If you run neural networks on the CPU, it may take a significant amount of time.)
+Network: Broadband internet connection.
+Storage: Requires 128 GB of available space.
 ```
 
-All code in this repository is tested under the environment of `Python 3.8.13`.
+Tested Hardware:
+```
+CPU: two slots of 16 Core Intel Xeon Gold 6226R CPU 2.90GHz Processor
+Memory: 8x32GB DDR4 DIMM 2933MHz Memory
+GPUs: GeForce RTX 3090 GPU.
+```
 
-## Prepare dataset
+```
+CPU: two slots of 32 Core AMD EPYC 7601 32-Core Processor
+Memory: 8x32GB DDR4 DIMM 2400MHz Memory
+GPUs: GeForce RTX 3090 GPU.
+```
 
-Due to the license of the original knowledge graph YAGO4, we do not provide download links here, please download from [YAGO4](https://yago-knowledge.org/downloads/yago-4).
-Then import the YAGO4 data into neo4j. 
+## Software
 
-## Generate Test Cases
+Tested System:
+* 64-bit Ubuntu 22.10 with Linux kernel 5.19.0
+* 64-bit Ubuntu 22.04.2 LTS Linux kernel 6.2.0
 
-```python
+Software Requirements:
+* docker-24.0.7
+* docker-compose-2.23.3-1
+* Anaconda3-2023.09-0-Linux-x86_64 (or Miniconda)
+
+Python Requirements:
+* sentencepiece==0.1.97
+* transformers==4.24.0
+* neo4j==5.8.0
+* neomodel==4.0.8
+* datasets==2.8.0
+* matplotlib==3.6.3
+* myers==1.0.1
+* sentence-transformers==2.2.2
+* openpyxl==3.1.2
+
+All code in this repository is tested under the environment of `Python 3.8.13`. We use conda to construct a virtual environment to run the python program.
+
+## Setup Neo4j (Optional)
+The complete YAGO4 dataset occupies approximately 60GB of storage. Downloading and importing it into Neo4j, as well as extracting questions, may require a significant amount of time. Therefore, we provide our generated test cases extracted from KG for download [LINK]().
+We packaged the Neo4j database with Docker:
+```
+bash setup_neo4j.sh
+```
+
+## Setup Python Environment
+This step requires Conda installation.
+```bash
+pushd kgit
+conda create --prefix=kgitenv python=3.8.13 --yes
+eval "$(conda shell.bash hook)"
+conda init
+conda activate ./kgitenv
+pip install -r requirements.txt
+popd
+```
+or
+```
+bash setup_python.sh
+```
+
+# Usage
+All the following commands should be executed in the `kgit` directory. Please run `cd kgit` first.
+```
+├── clean_all.sh
+├── docker-compose.yml
+├── kgit      <----------------------------HERE
+│   ├── answer_check.sh
+│   ├── answer_questions.py
+│   ├── check_questions.py
+│   ├── config.json
+│   ├── construct_questions.sh
+│   ├── Dockerfile
+│   ├── ir1.py
+│   ├── ir2.py
+│   ├── ir3.py
+│   ├── ir4.py
+│   ├── kgit
+│   ├── kgitenv
+│   ├── manual_check
+│   ├── requirements.txt
+│   ├── result
+│   ├── rq
+│   └── run.sh
+├── LICENSE
+├── neo4j_server
+│   ├── data
+│   ├── Dockerfile
+│   ├── download-yago4.sh
+│   ├── exclude.txt
+│   ├── import-yago4.sh
+│   ├── init-pipeline.sh
+│   ├── init-rdf.sh
+│   ├── logs
+│   ├── yago4
+│   ├── yago4_data
+│   └── yago4_files.txt
+├── README.md
+├── setup_neo4j.sh
+└── setup_python.sh
+```
+
+## Generate Test Cases (Optional, need neo4j and YAGO4)
+```bash
 python ir1.py
 python ir2.py
 python ir3.py
 python ir4.py
 ```
 
-## Answer Questions
+or
 
 ```bash
-python answer_questions.py -q result/ir1/questions.txt -o result/ir1/answers_${model}.txt --device cuda:0 --model ${model}
-python answer_questions.py -q result/ir2/questions.txt -o result/ir2/answers_${model}.txt --device cuda:0 --model ${model}
-python answer_questions.py -q result/ir3/questions.txt -o result/ir3/answers_${model}.txt --device cuda:0 --model ${model}
-python answer_questions.py -q result/ir4/questions.txt -o result/ir4/answers_${model}.txt --device cuda:0 --model ${model}
+bash construct_questions.sh
 ```
 
-## Check Answers
+If you have downloaded the test cases generated by us, please unzip them and place them in the directory `kgit/result`.
+
+## Answer Questions and Check Answers
 
 ```bash
-python check_questions.py -a result/ir1/answers_${model}.txt -o result/ir1/check_all_${model}.txt -s all
-python check_questions.py -a result/ir2/answers_${model}.txt -o result/ir2/check_all_${model}.txt -s all
-python check_questions.py -a result/ir3/answers_${model}.txt -o result/ir3/check_all_${model}.txt -s all
-python check_questions.py -a result/ir4/answers_${model}.txt -o result/ir4/check_all_${model}.txt -s all
-
-python check_questions.py -a result/ir1/answers_${model}.txt -o result/ir1/check_first_${model}.txt -s first
-python check_questions.py -a result/ir2/answers_${model}.txt -o result/ir2/check_first_${model}.txt -s first
-python check_questions.py -a result/ir3/answers_${model}.txt -o result/ir3/check_first_${model}.txt -s first
-python check_questions.py -a result/ir4/answers_${model}.txt -o result/ir4/check_first_${model}.txt -s first
-
-python check_questions.py -a result/ir1/answers_${model}.txt -o result/ir1/check_pre_${model}.txt -s pre
-python check_questions.py -a result/ir2/answers_${model}.txt -o result/ir2/check_pre_${model}.txt -s pre
-python check_questions.py -a result/ir3/answers_${model}.txt -o result/ir3/check_pre_${model}.txt -s pre
-python check_questions.py -a result/ir4/answers_${model}.txt -o result/ir4/check_pre_${model}.txt -s pre
+bash answer_check.sh
 ```
+The outputs of all models will be saved in the directory `kgit/result`.
 
 ## RQs
-
+RQ1: manual check
 ```bash
 # RQ1
-python rq/manual_check_sample.py
+# python rq/manual_check_sample.py
 # Manual Check and get statistics
 python rq/manual_check_summary.py
+```
+Then the manual check results will be printed in the terminal.
 
+RQ2: Effectiveness
+```bash
 # RQ2
+# Output: rq_result/effectiveness_all.xlsx
 python rq/effectiveness_all.py
+# Output: rq_result/effectiveness_first.xlsx
 python rq/effectiveness_first.py
+```
+Then the results will be saved under `kgit/rq_result`.
 
+RQ3: Retrain
+We fork the code of [T5](https://github.com/google-research/text-to-text-transfer-transformer) and implement the finetune script.
+The finetuning scripts can be found in the [repository](https://github.com/jstzwj/kgit-text-to-text-transfer-transformer).
+
+First, we split the dataset into train, valid and test sets.
+```bash
+bash copy_to_baselines.sh
+bash split_datasets.sh
+```
+
+Second, we need to convert the txt data into tsv format.
+```bash
+bash export_tsv.sh
+```
+
+Then copy these tsv to `text-to-text-transfer-transformer`. There are a script named `finetune.py` under the repo.
+```bash
 # RQ3
-python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-small-1363200 --model_type small --subtask ir1 --start_step 1363200 --batch 64
-python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-base-1363200 --model_type base --subtask ir1 --start_step 1363200 --batch 64
-python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-large-1363200 --model_type large --subtask ir1 --start_step 1363200 --batch 64
+python finetune.py --unifiedqa_path allenai/unifiedqa-v2-t5-small-1363200 --model_type small --subtask ir1 --start_step 1363200 --batch 64
+python finetune.py --unifiedqa_path allenai/unifiedqa-v2-t5-base-1363200 --model_type base --subtask ir1 --start_step 1363200 --batch 64
+python finetune.py --unifiedqa_path allenai/unifiedqa-v2-t5-large-1363200 --model_type large --subtask ir1 --start_step 1363200 --batch 64
 
-python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-small-1363200 --model_type small --subtask ir2 --start_step 1363200 --batch 64
-python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-base-1363200 --model_type base --subtask ir2 --start_step 1363200 --batch 64
-python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-large-1363200 --model_type large --subtask ir2 --start_step 1363200 --batch 64
+python finetune.py --unifiedqa_path allenai/unifiedqa-v2-t5-small-1363200 --model_type small --subtask ir2 --start_step 1363200 --batch 64
+python finetune.py --unifiedqa_path allenai/unifiedqa-v2-t5-base-1363200 --model_type base --subtask ir2 --start_step 1363200 --batch 64
+python finetune.py --unifiedqa_path allenai/unifiedqa-v2-t5-large-1363200 --model_type large --subtask ir2 --start_step 1363200 --batch 64
 
-python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-small-1363200 --model_type small --subtask ir3 --start_step 1363200 --batch 64
-python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-base-1363200 --model_type base --subtask ir3 --start_step 1363200 --batch 64
-python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-large-1363200 --model_type large --subtask ir3 --start_step 1363200 --batch 64
+python finetune.py --unifiedqa_path allenai/unifiedqa-v2-t5-small-1363200 --model_type small --subtask ir3 --start_step 1363200 --batch 64
+python finetune.py --unifiedqa_path allenai/unifiedqa-v2-t5-base-1363200 --model_type base --subtask ir3 --start_step 1363200 --batch 64
+python finetune.py --unifiedqa_path allenai/unifiedqa-v2-t5-large-1363200 --model_type large --subtask ir3 --start_step 1363200 --batch 64
 
-python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-small-1363200 --model_type small --subtask ir4 --start_step 1363200 --batch 64
-python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-base-1363200 --model_type base --subtask ir4 --start_step 1363200 --batch 64
-python rq/retrain.py --unifiedqa_path allenai/unifiedqa-v2-t5-large-1363200 --model_type large --subtask ir4 --start_step 1363200 --batch 64
+python finetune.py --unifiedqa_path allenai/unifiedqa-v2-t5-small-1363200 --model_type small --subtask ir4 --start_step 1363200 --batch 64
+python finetune.py --unifiedqa_path allenai/unifiedqa-v2-t5-base-1363200 --model_type base --subtask ir4 --start_step 1363200 --batch 64
+python finetune.py --unifiedqa_path allenai/unifiedqa-v2-t5-large-1363200 --model_type large --subtask ir4 --start_step 1363200 --batch 64
+```
 
+RQ4: Baselines
+In RQ3, we have got the train/valid/test dataset under folder ./result/baseline/ for QAQA.
+For more information of QAQA, please reference the repository of [QAQA](https://github.com/ShenQingchao/QAQA.git).
+```bash
 # RQ4
-# Here we get the train/valid/test dataset under folder ./result/baseline/ for QAQA
-bash setup_baseline_data.sh
+# In RQ3, we get the train/valid/test dataset under folder ./result/baseline/ for QAQA
 # Then prepare the code and environment of QAQA following the readme in QAQA repo: https://github.com/ShenQingchao/QAQA.git
 pushd ../
 git clone https://github.com/ShenQingchao/QAQA.git
 popd
 # Please install the QAQA and setup configs following the readme https://github.com/ShenQingchao/QAQA/blob/master/README.md
-
-# discussion
-python rq/effectiveness_all_nc.py
-python rq/effectiveness_first_nc.py
-python rq/efficiency.py
-python rq/overlaps.py
-python rq/scale.py
 ```
 
-## Relation List
+Discussion:
+```bash
+# discussion
+# Output: rq_result/effectiveness_all_nc.xlsx
+python rq/effectiveness_all_nc.py
+# Output: rq_result/effectiveness_first_nc.xlsx
+python rq/effectiveness_first_nc.py
 
-In YAGO4, relations and attributes come from [schema.org](schema.org), and all relations have the prefix 'sch__'.
-In the paper, for brevity, we ignore all the prefix 'sch_'.
+# Output: rq_result/venn_out.pdf
+python rq/overlaps.py
+```
 
-IR1:
-
-| R1              | R1 Extension      | R2                | R2 Extension         |
-| --------------- | ----------------- | ----------------- | -------------------- |
-| sch__author     | the author of     | sch__affiliation  | the affiliation of   |
-| sch__creator    | the creator of    | sch__alumniOf     | an alumnus of        |
-| sch__colorist   | the colorist of   | sch__birthPlace   | the birthplace of    |
-| sch__composer   | the composer of   | sch__children     | a child of           |
-| sch__director   | the director of   | sch__deathPlace   | the death place of   |
-| sch__editor     | the editor of     | sch__familyName   | the family name of   |
-| sch__founder    | the founder of    | sch__givenName    | the given name of    |
-| sch__organizer  | the organizer of  | sch__gender       | the gender of        |
-| sch__publisher  | the publisher of  | sch__homeLocation | the home location of |
-| sch__provider   | the provider of   | sch__location     | the location of      |
-| sch__producer   | the producer of   | sch__parent       | a parent of          |
-| sch__translator | the translator of |                   |                      |
-|                 |                   |                   |                      |
-
-IR2:
-
-| R                 | R Extension         |
-| ----------------- | ------------------- |
-| sch__actor        | an actor in         |
-| sch__affiliation  | the affiliation of  |
-| sch__alumniOf     | an alumnus of       |
-| sch__author       | the author of       |
-| sch__birthPlace   | the birthplace of   |
-| sch__brand        | the brand of        |
-| sch__character    | a character in      |
-| sch__children     | a child of          |
-| sch__colorist     | the colorist of     |
-| sch__competitor   | a competitor of     |
-| sch__composer     | the composer of     |
-| sch__deathPlace   | the death place of  |
-| sch__editor       | the editor of       |
-| sch__familyName   | the family name of  |
-| sch__givenName    | the given name of   |
-| sch__gender       | the gender of       |
-| sch__homeLocation | the homeLocation of |
-| sch__organizer    | the organizer of    |
-| sch__creator      | the creator of      |
-| sch__location     | the location of     |
-| sch__parent       | a parent of         |
-| sch__director     | the director of     |
-| sch__founder      | the founder of      |
-| sch__producer     | the producer of     |
-| sch__provider     | the provider of     |
-| sch__publisher    | the publisher of    |
-| sch__sponsor      | a sponsor of        |
-| sch__translator   | the translator of   |
-
-R3:
-
-| R                  | R Extension |
-| ------------------ | ----------- |
-| sch__hasPart       | a part of   |
-| sch__containsPlace | a place in  |
-
-R4:
-
-| R               |   R Extension     |
-| --------------- | ----------------- |
-| sch__hasPart    | a part of         |
-| sch__parent     | a parent of       |
-| sch__children   | a child of        |
-| sch__author     | the author of     |
-| sch__editor     | the editor of     |
-| sch__creator    | the creator of    |
-| sch__organizer  | the organizer of  |
-| sch__director   | the director of   |
-| sch__founder    | the founder of    |
-| sch__producer   | the producer of   |
-| sch__provider   | the provider of   |
-| sch__publisher  | the publisher of  |
-| sch__sponsor    | a sponsor of      |
-| sch__translator | the translator of |
-| sch__colorist   | the colorist of   |
-| sch__competitor | a competitor of   |
-| sch__composer   | the composer of   |
-
-# References
-
-For more details about data processing, please refer to the `code comments` and our paper.
+# LICENSE
+Apache License Version 2.0

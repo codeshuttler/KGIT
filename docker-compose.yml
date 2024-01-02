@@ -1,0 +1,18 @@
+version: "3.3" # optional since v1.27.0
+services:
+  neo4j:
+    restart: always
+    user: "${DOCKER_UID}:${DOCKER_GID}"
+    build: ./neo4j_server
+    container_name: neo4j_server
+    ports:
+      - "7475:7474"
+      - "7688:7687"
+    volumes:
+      - ./neo4j_server/data:/data
+      - ./neo4j_server/logs:/logs
+      - ./neo4j_server/import:/var/lib/neo4j/import
+      - ./neo4j_server/plugins:/plugins
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
