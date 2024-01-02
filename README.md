@@ -12,7 +12,7 @@ Finally, the data is input into question-answering models to obtain results.
 This is the source code for the paper "Knowledge Graph Driven Inference Testing for Question Answering Software".
 
 # Data
-The data for the artifact is from [YAGO 4](https://yago-knowledge.org/downloads/yago-4). YAGO 4 a version of the YAGO knowledge base that is based on Wikidata — the largest public general-purpose knowledge base. 
+The data for the artifact is from [YAGO 4](https://yago-knowledge.org/downloads/yago-4). YAGO 4, a version of the YAGO knowledge base that is based on Wikidata — the largest public general-purpose knowledge base. 
 
 We have included a script in our code that downloads the YAGO4 data. However, due to potential slow download speeds from the official YAGO mirror, you can download the data from alternative sources and place it in the `neo4j_server/yago4_data`` directory.
 
@@ -23,6 +23,8 @@ YAGO4 includes the following data files:
 * yago-wd-schema.nt.gz
 * yago-wd-shapes.nt.gz
 * yago-wd-simple-types.nt.gz
+
+Downloading and deploying the complete YAGO 4 dataset may take a very long time (it took us three days to download and around four hours to import on our own server). Therefore, you can [download](https://github.com/codeshuttler/KGIT/releases/tag/20240102) the generated test cases from our knowledge graph to skip this step.
 
 In addition, we use the question-answering model `unifiedqa-v2-t5`, grammar correction model `pszemraj/flan-t5-large-grammar-synthesis` and text similarity model `sentence-transformers/all-mpnet-base-v2`, and the script automatically downloads the model weights from Hugging Face to the local environment. If the download speed is slow, you can use a Hugging Face mirror or specify the model directory in the code to use a locally downloaded model.
 
