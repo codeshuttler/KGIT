@@ -79,7 +79,7 @@ Python Requirements:
 All code in this repository is tested under the environment of `Python 3.8.13`. We use conda to construct a virtual environment to run the python program.
 
 ## Setup Neo4j (Optional)
-The complete YAGO4 dataset occupies approximately 60GB of storage. Downloading and importing it into Neo4j, as well as extracting questions, may require a significant amount of time. Therefore, we provide our generated test cases extracted from KG for download [LINK]().
+The complete YAGO4 dataset occupies approximately 60GB of storage. Downloading and importing it into Neo4j, as well as extracting questions, may require a significant amount of time. Therefore, we provide our generated test cases extracted from KG for [download](https://github.com/codeshuttler/KGIT/releases/tag/20240102).
 We packaged the Neo4j database with Docker:
 ```
 bash setup_neo4j.sh
