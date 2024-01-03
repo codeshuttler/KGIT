@@ -10,6 +10,8 @@ Finally, the data is input into question-answering models to obtain results.
 
 ## Provenance
 This is the source code for the paper "Knowledge Graph Driven Inference Testing for Question Answering Software".
+The artifacts of this paper have already been archived on Software Heritage.
+You can download the artifacts of this paper from [HERE](https://archive.softwareheritage.org/browse/origin/https://github.com/codeshuttler/KGIT).
 
 # Data
 The data for the artifact is from [YAGO 4](https://yago-knowledge.org/downloads/yago-4). YAGO 4, a version of the YAGO knowledge base that is based on Wikidata — the largest public general-purpose knowledge base. 
