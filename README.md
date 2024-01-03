@@ -8,6 +8,11 @@ The first part stores YAGO4 knowledge graph data into a Neo4j graph database.
 The second part queries Neo4j for entity relationship pairs that meet certain conditions and generating test cases.
 Finally, the data is input into question-answering models to obtain results.
 
+## Badges
+We are applying for the following badges:
+- Available: we archived the reproducible code on Software Heritage, ensuring long-term availability and accessibility for researchers and practitioners.
+- Reusable: we provided information regarding the hardware and software requirements necessary for replication, as well as detailed steps to reproduce the results presented in the paper. By providing clear instructions, we aim to enable other researchers to easily reuse our artifact and build upon our work.
+
 ## Provenance
 This is the source code for the paper "Knowledge Graph Driven Inference Testing for Question Answering Software".
 The artifacts of this paper have already been archived on Software Heritage.
