@@ -14,7 +14,8 @@ We are applying for the following badges:
 - Reusable: we provided information regarding the hardware and software requirements necessary for replication, as well as detailed steps to reproduce the results presented in the paper. By providing clear instructions, we aim to enable other researchers to easily reuse our artifact and build upon our work.
 
 ## Provenance
-This is the source code for the paper "Knowledge Graph Driven Inference Testing for Question Answering Software" [Accepted Version](https://github.com/codeshuttler/KGIT/releases/download/paper_20240102/KGIT_20240102.pdf).
+This is the source code for the paper "Knowledge Graph Driven Inference Testing for Question Answering Software" ([Accepted Version](https://github.com/codeshuttler/KGIT/releases/download/paper_20240102/KGIT_20240102.pdf)).
+
 The artifacts of this paper have already been archived on Software Heritage.
 You can download the artifacts of this paper from [HERE](https://archive.softwareheritage.org/browse/origin/https://github.com/codeshuttler/KGIT).
 
